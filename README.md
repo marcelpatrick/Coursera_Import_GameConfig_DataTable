@@ -9,3 +9,22 @@
    - Mark it as USTRUCT type to be used in Unreal
    - Blueprint type allows our Unreal project to access this struct 
    - inherit from the FTableRowBase class because it is a struct that will read a table made of rows
+
+```cpp
+USTRUCT(BlueprintType) 
+struct FConfigurationDataStruct : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	//Constructor for the struct
+		//Assign default values to each variable inside the ()
+		//ConfigurationDataStruct is the DataTable row type I'm trying to import
+	FConfigurationDataStruct() : TeddyBearMoveAmountPerSecond(100) {}
+
+	//Expose each column of the table to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration Data Struct")
+	float TeddyBearMoveAmountPerSecond;
+};
+```
