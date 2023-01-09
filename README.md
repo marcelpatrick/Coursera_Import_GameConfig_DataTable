@@ -6,6 +6,6 @@
   
   
 ### 1.1- Define my struct
-    - Mark it as USTRUCT type to be used in Unreal
-    - Blueprint type allows our Unreal project to access this struct 
-    - inherit from the FTableRowBase class because it is a struct that will read a table made of rows
+   - Mark it as USTRUCT type to be used in Unreal
+   - Blueprint type allows our Unreal project to access this struct 
+   - inherit from the FTableRowBase class because it is a struct that will read a table made of rows
