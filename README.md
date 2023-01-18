@@ -128,3 +128,58 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
      - Create a blueprint based on this data actor, BP_Configuration data actor
      - Inside this BP go to my table UPROPERTY and select my ConfigurationData. This give my data actor access to my DataTable with data imported from the CSV file
      - Add this actor to the scene
+
+# Make other actors in our world consume data in the data actor
+
+# 1- Tag the data actor
+  - This allows the other actors to find the data actor by its tag
+  - Edit > Project settings > game play tag > add new gameplay tag > add new tag "ConfigurationDataActor"
+  - Open BP_ConfigurationDataActor and on the tag field, add a new element and name it with the same name of your tag
+
+# 2- Create and actor to consume the data
+  - Create a new c++ class type pawn "FishPawn"
+  - Header file
+    - Declare a pointer of ConfigurationDataActor type. 
+```cpp
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
+#include "ConfigurationDataActor.h"
+#include "FishPawn.generated.h"
+
+UCLASS()
+class DATATABLE_API AFishPawn : public APawn
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this pawn's properties
+	AFishPawn();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+
+	AConfigurationDataActor* ConfigurationDataActor; 
+
+};
+
+```
+  - Implementation file
+    - Iterate through all the actors with that tag and save then in a TArray
+    - Save the configuration data in the configuration data pointer variable
+    - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
+
+
