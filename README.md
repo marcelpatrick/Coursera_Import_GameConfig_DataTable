@@ -40,7 +40,7 @@ public:
    - Right click import and select the file
    - Select import as datatable and select ConfigurationDataStruct as the row type
 
-# 3- Create an actor to give access to the csv datatable 
+# 3- Create a data actor through which the other actors will consume the data from our data table 
   - Add a new cpp class type actor to be our data actor so that the other actors can consume data directly from my data actor.
   - Header file:
     - Declare a FConfigurationDataStruct pointer to store each row of the file
