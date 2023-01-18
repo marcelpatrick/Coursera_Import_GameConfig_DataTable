@@ -88,10 +88,6 @@ public:
       - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my FConfigurationDataStruct row variable
     - Implement the Getter for that metric
       - return the row variable accessing the column variable
-   - Inside Unreal
-     - Create a blueprint based on this data actor, BP_Configuration data actor
-     - Inside this BP go to my table UPROPERTY and select my ConfigurationData. This give my data actor access to my DataTable with data imported from the CSV file
-     - Add this actor to the scene
 ```cpp
 #include "ConfigurationDataActor.h"
 
@@ -128,4 +124,7 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
 	return ConfigurationDataRow->TeddyBearMoveAmountPerSecond; 
 }
 ```
-
+   - Inside Unreal
+     - Create a blueprint based on this data actor, BP_Configuration data actor
+     - Inside this BP go to my table UPROPERTY and select my ConfigurationData. This give my data actor access to my DataTable with data imported from the CSV file
+     - Add this actor to the scene
