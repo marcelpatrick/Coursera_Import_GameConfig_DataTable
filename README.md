@@ -178,7 +178,7 @@ private:
 
 ```
   - Implementation file
-    - Iterate through all the actors with that tag and save then in a TArray
+    - Iterate through all the actors with that tag and save them in a TArray of Actor pointers
     - Save the configuration data in the configuration data pointer variable
     - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
 
