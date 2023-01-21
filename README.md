@@ -174,7 +174,13 @@ private:
     - In Begin Play
       - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
       - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
-
+    - Inside MoveActor()
+      - Get the current location for this actor
+      - Declare a FVector to store this actor's new location
+      - Use the ConfigurationData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
+      - Assign the new location for vector Y as the current location plus the Move float
+      - Set the new actor location
+      - Call MoveActor() on beginplay passing the ConfigurationData pointer
 ```cpp
 void AFishPawn::BeginPlay()
 {
@@ -193,14 +199,6 @@ void AFishPawn::BeginPlay()
 	
 }
 ```
-
-    - Inside MoveActor()
-      - Get the current location for this actor
-      - Declare a FVector to store this actor's new location
-      - Use the ConfigurationData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
-      - Assign the new location for vector Y as the current location plus the Move float
-      - Set the new actor location
-      - Call MoveActor() on beginplay passing the ConfigurationData pointer
 
 ```cpp
 void AFishPawn::MoveActor(AConfigurationDataActor* ConfigurationData)
