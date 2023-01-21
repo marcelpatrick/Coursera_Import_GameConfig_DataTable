@@ -174,6 +174,26 @@ private:
     - In Begin Play
       - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
       - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
+
+```cpp
+void AFishPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TArray<AActor*> ConfigurationDataActors;
+
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "ConfigurationDataActor", ConfigurationDataActors);
+
+	if (ConfigurationDataActors.Num() > 0)
+	{
+		ConfigurationData = (AConfigurationDataActor*)ConfigurationDataActors[0]; 
+	}
+
+	MoveActor(ConfigurationData);
+	
+}
+```
+
     - Inside MoveActor()
       - Get the current location for this actor
       - Declare a FVector to store this actor's new location
