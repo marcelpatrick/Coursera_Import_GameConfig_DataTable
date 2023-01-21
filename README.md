@@ -138,8 +138,10 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
 
 # 2- Create and actor to consume the data
   - Create a new c++ class type pawn "FishPawn"
+  
   - Header file
     - Declare a pointer of ConfigurationDataActor type. 
+    - Declare a MoveActor() function 
 ```cpp
 // Fill out your copyright notice in the Description page of Project Settings.
 
@@ -158,17 +160,8 @@ class DATATABLE_API AFishPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AFishPawn();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	void MoveActor(AConfigurationDataActor* ConfigurationData);
 
 private:
 
@@ -178,8 +171,46 @@ private:
 
 ```
   - Implementation file
-    - Iterate through all the actors with that tag and save them in a TArray of Actor pointers
-    - Save the configuration data in the configuration data pointer variable
-    - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
+    - In Begin Play
+      - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
+      - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
+    - Inside MoveActor()
+      - Get the current location for this actor
+      - Declare a FVector to store this actor's new location
+      - Use the ConfigurationData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
+      - Assign the new location for vector Y as the current location plus the Move float
+      - Set the new actor location
+      - Call MoveActor() on beginplay passing the ConfigurationData pointer
+
+```cpp
+void AFishPawn::MoveActor(AConfigurationDataActor* ConfigurationData)
+{
+	
+	FVector CurrentActorLocation = GetActorLocation();
+	FVector NewActorLocation;
+
+	UE_LOG(LogTemp, Warning, TEXT("este é o CurrentActorLocation Y = %f"), CurrentActorLocation.Y);
+
+	try
+	{
+		float Move = ConfigurationData->GetTeddyBearMoveAmountPerSecond(); 
+
+		NewActorLocation.Y = CurrentActorLocation.Y + Move;
+	}
+	catch(const std::exception& e)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("erro no Get do arquivo ou NewActorLocation"), e.what());
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("este é o NEW Y = %f"), NewActorLocation.Y);
+
+	SetActorLocation(NewActorLocation);
+
+	UE_LOG(LogTemp, Warning, TEXT("esta é a nova Actor Location %f"), GetActorLocation().Y);
+}
+```
+
+  - Create a Blueprint based on this class and place it into the world
+    - Add a static mesh to this blueprint
 
 
