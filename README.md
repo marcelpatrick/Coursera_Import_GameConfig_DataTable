@@ -136,7 +136,7 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
   - Edit > Project settings > game play tag > add new gameplay tag > add new tag "ConfigurationDataActor"
   - Open BP_ConfigurationDataActor and on the tag field, add a new element and name it with the same name of your tag
 
-# 2- Create and actor to consume the data
+# 2- Create an actor to consume the data
   - Create a new c++ class type pawn "FishPawn"
   
   - Header file
