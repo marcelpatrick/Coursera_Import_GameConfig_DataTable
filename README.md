@@ -137,10 +137,11 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
   - Open BP_ConfigurationDataActor and on the tag field, add a new element and name it with the same name of your tag
 
 # 2- Create an actor to consume the data
-  - Create a new c++ class type pawn "FishPawn"
+  - Create a new c++ class type pawn "MyActor"
   
   - Header file
-    - Declare a pointer of ConfigurationDataActor type. 
+    - Declare a pointer of ConfigurationDataActor type, an FVector for CurrentActorLocation and another for the NewActorLocation
+    - Define a GetConfigurationData() function
     - Declare a MoveActor() function 
 ```cpp
 // Fill out your copyright notice in the Description page of Project Settings.
@@ -150,28 +151,31 @@ float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "ConfigurationDataActor.h"
-#include "FishPawn.generated.h"
+#include "MyActor.generated.h"
 
 UCLASS()
-class DATATABLE_API AFishPawn : public APawn
+class DATATABLE_API AMyActor : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AFishPawn();
+	AMyActor();
 	
-	void MoveActor(AConfigurationDataActor* ConfigurationData);
+	void GetConfigurationData();
+	void MoveActor(AConfigurationDataActor* ConfigurationData, FVector CurrentActorLocation);
 
 private:
 
 	AConfigurationDataActor* ConfigurationDataActor; 
+	FVector CurrentActorLocation; 
+	FVector NewActorLocation;
 
 };
 
 ```
   - Implementation file
-    - In Begin Play
+    - Inside GetConfigurationData()
       - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
       - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
     - Inside MoveActor()
@@ -180,12 +184,24 @@ private:
       - Use the ConfigurationData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
       - Assign the new location for vector Y as the current location plus the Move float
       - Set the new actor location
-      - Call MoveActor() on beginplay passing the ConfigurationData pointer
+    - Get CurrentActorLocation
+    - Call GetConfigurationData() on beginplay
+    - Call MoveActor() on beginplay passing the ConfigurationData pointer and CurrentActorLocation
 ```cpp
-void AFishPawn::BeginPlay()
+void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetConfigurationData();
+	
+	CurrentActorLocation = GetActorLocation();
+
+	MoveActor(ConfigurationData, CurrentActorLocation);
+	
+}
+
+void AMyActor::GetConfigurationData()
+{
 	TArray<AActor*> ConfigurationDataActors;
 
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "ConfigurationDataActor", ConfigurationDataActors);
@@ -194,41 +210,73 @@ void AFishPawn::BeginPlay()
 	{
 		ConfigurationData = (AConfigurationDataActor*)ConfigurationDataActors[0]; 
 	}
-
-	MoveActor(ConfigurationData);
-	
 }
-```
 
-```cpp
-void AFishPawn::MoveActor(AConfigurationDataActor* ConfigurationData)
+void AMyActor::MoveActor(AConfigurationDataActor* ConfigurationData)
 {
-	
-	FVector CurrentActorLocation = GetActorLocation();
-	FVector NewActorLocation;
-
-	UE_LOG(LogTemp, Warning, TEXT("este é o CurrentActorLocation Y = %f"), CurrentActorLocation.Y);
-
 	try
 	{
 		float Move = ConfigurationData->GetTeddyBearMoveAmountPerSecond(); 
 
+		if (Move < 1)
+		{
+			throw Move;
+		}
+		
 		NewActorLocation.Y = CurrentActorLocation.Y + Move;
 	}
-	catch(const std::exception& e)
+	catch(float Move)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("erro no Get do arquivo ou NewActorLocation"), e.what());
+		UE_LOG(LogTemp, Warning, TEXT("Move can't be smaller than 1. Move is %f"), Move);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("este é o NEW Y = %f"), NewActorLocation.Y);
-
 	SetActorLocation(NewActorLocation);
-
-	UE_LOG(LogTemp, Warning, TEXT("esta é a nova Actor Location %f"), GetActorLocation().Y);
 }
 ```
 
   - Create a Blueprint based on this class and place it into the world
     - Add a static mesh to this blueprint
 
+# Save Game
+
+- In Unreal Engine add a save game class MySaveGame
+
+- In its header file 
+  - declare an float variable to store the position from the data table to be passed to the Y component of the actor's position vector and expose it with UPROPERTY
+```cpp
+UCLASS()
+class DATATABLE_API UMySaveGame : public USaveGame
+{
+	GENERATED_BODY()
+	
+public:
+
+	UPROPERTY(VisibleAnywhere, Category = "Saved Y")
+	float SavedY = 0.0f;
+};
+```
+
+- in MyActor header file
+  - Declare a LoadGame() and SaveGame() functions
+  - Declare a UMySaveGame pointer variable
+```cpp
+public:
+	void LoadGame();
+	void SaveGame();
+
+private:
+	UMySaveGame* MySaveGame; 
+```
+
+- In MyActor Implementation file
+  - Inside LoadGame() 
+    - try to load a previously saved game. 
+    - If there is none, initialize the current actor location and create a new empty save game object
+    - If there was already a saved game, load the SavedY location and pass it into the CurrentActorLocation
+  - Inside SaveGame()
+    - Pass the NewActorLocation into the SavedY variable in the MySaveGame object
+    - Save game to slot
+  - In BeginPlay()
+    - Replace the previous CurrentActorLocation initialization by LoadGame()
+    - Call SaveGame() after MoveActor()
 
