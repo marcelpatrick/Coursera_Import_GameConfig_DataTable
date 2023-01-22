@@ -273,10 +273,57 @@ private:
     - try to load a previously saved game. 
     - If there is none, initialize the current actor location and create a new empty save game object
     - If there was already a saved game, load the SavedY location and pass it into the CurrentActorLocation
+```cpp
+void AMyActor::LoadGame()
+{
+	//Try to load a previously saved game
+	MySaveGame = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
+
+	//If there is no previously saved game
+	if (MySaveGame == nullptr)
+	{
+		//Initialize current actor location
+		CurrentActorLocation = GetActorLocation();
+
+		//Create an empty save game object to be filled later
+		MySaveGame = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	}
+	else //If there is already a saved game
+	{
+		//Define location Y = to that we had saved previously
+		CurrentActorLocation.Y = MySaveGame->SavedY;
+	}
+	
+}
+```
+
   - Inside SaveGame()
     - Pass the NewActorLocation into the SavedY variable in the MySaveGame object
     - Save game to slot
+
+```cpp
+void AMyActor::SaveGame()
+{
+	MySaveGame->SavedY = NewActorLocation.Y; 
+
+	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+}
+```
+
   - In BeginPlay()
     - Replace the previous CurrentActorLocation initialization by LoadGame()
     - Call SaveGame() after MoveActor()
+```cpp
+void AMyActor::BeginPlay()
+{
+	Super::BeginPlay();
 
+	GetConfigurationData();
+
+	LoadGame();
+
+	MoveActor(ConfigurationData, CurrentActorLocation);
+
+	SaveGame();
+}
+```
