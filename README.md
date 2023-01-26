@@ -44,7 +44,7 @@ public:
   - Add a new cpp class type actor to be our data actor so that the other actors can consume data directly from this data actor.
   - Header file:
     - Declare a FMyDataStruct pointer to store each row of the file
-    - Declare a UDataTable pointer to store the entire data table file we imported and expose it to the blueprint with UPROPERTY
+    - Declare a UDataTable pointer and expose it to the blueprint with UPROPERTY so that we can attach our data table file we imported to this pointer as a UDataTable type.
     - Add a Getter to get the metrics in the table
 ```cpp
 #include "CoreMinimal.h"
@@ -58,7 +58,7 @@ class DATATABLE_API AMyActor : public AActor
 
 private:
 	//Declare a FMyDataStruct pointer to store the rows of the file
-	FMyDataStruct* ConfigurationDataRow; 
+	FMyDataStruct* MyDataRow; 
 
 	
 public:	
@@ -84,7 +84,7 @@ public:
 
   - Implementation cpp file
     - Set tick to false
-    - In BeginPlay() get the data from each row the data table and store in my UDataTable variable
+    - In BeginPlay() access my data table, find each row and store the information of each row in a row variable
       - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my FMyDataStructrow variable
     - Implement the Getter for that metric
       - return the row variable accessing the column variable
@@ -107,7 +107,7 @@ void AMyActor::BeginPlay()
 
 	FString ContextString;
 	//Row variable = File variable->FindRow<Type of data in the row>("name of that row", context string)
-	ConfigurationDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("Data", ContextString);
+	MyDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("Data", ContextString);
 
 	
 }
@@ -121,7 +121,7 @@ void AMyActor::Tick(float DeltaTime)
 
 float AMyActor::GetMyMovement()
 {
-	return ConfigurationDataRow->MyMovement; 
+	return MyDataRow->MyMovement; 
 }
 ```
    - Inside Unreal
