@@ -85,9 +85,9 @@ public:
   - Implementation cpp file
     - Set tick to false
     - In BeginPlay() access my data table, find each row and store the information of each row in a row variable
-      - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my FMyDataStructrow variable
+      - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my MyDataRow variable
     - Implement the Getter for that metric
-      - return the row variable accessing the column variable
+      - return the the specific column on that row of which data we want to store
 ```cpp
 #include "MyActor.h"
 
@@ -125,8 +125,8 @@ float AMyActor::GetMyMovement()
 }
 ```
    - Inside Unreal
-     - Create a blueprint based on this data actor, BP_Configuration data actor
-     - Inside this BP go to my table UPROPERTY and select my ConfigurationData. This give my data actor access to my DataTable with data imported from the CSV file
+     - Create a blueprint based on this data actor, BP_DataActor
+     - Inside this BP go to my table UPROPERTY and select my data table. This gives my data actor access to my DataTable with data imported from the CSV file
      - Add this actor to the scene
 
 # Make other actors in our world consume data in the data actor
@@ -141,7 +141,7 @@ float AMyActor::GetMyMovement()
   
   - Header file
     - Declare a pointer of MyActor type, an FVector for CurrentActorLocation and another for the NewActorLocation
-    - Define a GetConfigurationData() function
+    - Declare a GetMyData() function
     - Declare a MoveActor() function 
 ```cpp
 // Fill out your copyright notice in the Description page of Project Settings.
@@ -162,8 +162,8 @@ public:
 	// Sets default values for this pawn's properties
 	AMyActor();
 	
-	void GetConfigurationData();
-	void MoveActor(AMyActor* ConfigurationData, FVector CurrentActorLocation);
+	void GetMyData();
+	void MoveActor(AMyActor* MyData, FVector CurrentActorLocation);
 
 private:
 
@@ -175,32 +175,32 @@ private:
 
 ```
   - Implementation file
-    - Inside GetConfigurationData()
+    - Inside GetMyData()
       - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
       - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AMyActor pointer type and save it in my configuration data pointer
     - Inside MoveActor()
       - Get the current location for this actor
       - Declare a FVector to store this actor's new location
-      - Use the ConfigurationData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
+      - Use the MyData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
       - Assign the new location for vector Y as the current location plus the Move float
       - Set the new actor location
     - Get CurrentActorLocation
-    - Call GetConfigurationData() on beginplay
-    - Call MoveActor() on beginplay passing the ConfigurationData pointer and CurrentActorLocation
+    - Call GetMyData() on beginplay
+    - Call MoveActor() on beginplay passing the MyData pointer and CurrentActorLocation
 ```cpp
 void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetConfigurationData();
+	GetMyData();
 	
 	CurrentActorLocation = GetActorLocation();
 
-	MoveActor(ConfigurationData, CurrentActorLocation);
+	MoveActor(MyData, CurrentActorLocation);
 	
 }
 
-void AMyActor::GetConfigurationData()
+void AMyActor::GetMyData()
 {
 	TArray<AActor*> MyActors;
 
@@ -208,15 +208,15 @@ void AMyActor::GetConfigurationData()
 
 	if (MyActors.Num() > 0)
 	{
-		ConfigurationData = (AMyActor*)MyActors[0]; 
+		MyData = (AMyActor*)MyActors[0]; 
 	}
 }
 
-void AMyActor::MoveActor(AMyActor* ConfigurationData)
+void AMyActor::MoveActor(AMyActor* MyData)
 {
 	try
 	{
-		float Move = ConfigurationData->GetMyMovement(); 
+		float Move = MyData->GetMyMovement(); 
 
 		if (Move < 1)
 		{
@@ -318,11 +318,11 @@ void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetConfigurationData();
+	GetMyData();
 
 	LoadGame();
 
-	MoveActor(ConfigurationData, CurrentActorLocation);
+	MoveActor(MyData, CurrentActorLocation);
 
 	SaveGame();
 }
