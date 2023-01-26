@@ -49,10 +49,10 @@ public:
 ```cpp
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ConfigurationDataActor.generated.h"
+#include "MyActor.generated.h"
 
 UCLASS()
-class DATATABLE_API AConfigurationDataActor : public AActor
+class DATATABLE_API AMyActor : public AActor
 {
 	GENERATED_BODY()
 
@@ -63,7 +63,7 @@ private:
 	
 public:	
 	// Sets default values for this actor's properties
-	AConfigurationDataActor();
+	AMyActor();
 
 	//Allows to use the blueprint editor to populate this UDataTable variable with values from the data table I imported 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Table")
@@ -89,10 +89,10 @@ public:
     - Implement the Getter for that metric
       - return the row variable accessing the column variable
 ```cpp
-#include "ConfigurationDataActor.h"
+#include "MyActor.h"
 
 // Sets default values
-AConfigurationDataActor::AConfigurationDataActor()
+AMyActor::AMyActor()
 {
  	// Set tick to false
 	PrimaryActorTick.bCanEverTick = false;
@@ -100,7 +100,7 @@ AConfigurationDataActor::AConfigurationDataActor()
 }
 
 // Called when the game starts or when spawned
-void AConfigurationDataActor::BeginPlay()
+void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -113,13 +113,13 @@ void AConfigurationDataActor::BeginPlay()
 }
 
 // Called every frame
-void AConfigurationDataActor::Tick(float DeltaTime)
+void AMyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-float AConfigurationDataActor::GetMyMovement()
+float AMyActor::GetMyMovement()
 {
 	return ConfigurationDataRow->MyMovement; 
 }
@@ -133,14 +133,14 @@ float AConfigurationDataActor::GetMyMovement()
 
 # 1- Tag the data actor
   - This allows the other actors to find the data actor by its tag
-  - Edit > Project settings > game play tag > add new gameplay tag > add new tag "ConfigurationDataActor"
-  - Open BP_ConfigurationDataActor and on the tag field, add a new element and name it with the same name of your tag
+  - Edit > Project settings > game play tag > add new gameplay tag > add new tag "MyActor"
+  - Open BP_MyActor and on the tag field, add a new element and name it with the same name of your tag
 
 # 2- Create an actor to consume the data
   - Create a new c++ class type pawn "MyActor"
   
   - Header file
-    - Declare a pointer of ConfigurationDataActor type, an FVector for CurrentActorLocation and another for the NewActorLocation
+    - Declare a pointer of MyActor type, an FVector for CurrentActorLocation and another for the NewActorLocation
     - Define a GetConfigurationData() function
     - Declare a MoveActor() function 
 ```cpp
@@ -150,7 +150,7 @@ float AConfigurationDataActor::GetMyMovement()
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "ConfigurationDataActor.h"
+#include "MyActor.h"
 #include "MyActor.generated.h"
 
 UCLASS()
@@ -163,11 +163,11 @@ public:
 	AMyActor();
 	
 	void GetConfigurationData();
-	void MoveActor(AConfigurationDataActor* ConfigurationData, FVector CurrentActorLocation);
+	void MoveActor(AMyActor* ConfigurationData, FVector CurrentActorLocation);
 
 private:
 
-	AConfigurationDataActor* ConfigurationDataActor; 
+	AMyActor* MyActor; 
 	FVector CurrentActorLocation; 
 	FVector NewActorLocation;
 
@@ -177,7 +177,7 @@ private:
   - Implementation file
     - Inside GetConfigurationData()
       - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
-      - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AConfigurationDataActor pointer type and save it in my configuration data pointer
+      - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AMyActor pointer type and save it in my configuration data pointer
     - Inside MoveActor()
       - Get the current location for this actor
       - Declare a FVector to store this actor's new location
@@ -202,17 +202,17 @@ void AMyActor::BeginPlay()
 
 void AMyActor::GetConfigurationData()
 {
-	TArray<AActor*> ConfigurationDataActors;
+	TArray<AActor*> MyActors;
 
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "ConfigurationDataActor", ConfigurationDataActors);
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "MyActor", MyActors);
 
-	if (ConfigurationDataActors.Num() > 0)
+	if (MyActors.Num() > 0)
 	{
-		ConfigurationData = (AConfigurationDataActor*)ConfigurationDataActors[0]; 
+		ConfigurationData = (AMyActor*)MyActors[0]; 
 	}
 }
 
-void AMyActor::MoveActor(AConfigurationDataActor* ConfigurationData)
+void AMyActor::MoveActor(AMyActor* ConfigurationData)
 {
 	try
 	{
