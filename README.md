@@ -43,7 +43,7 @@ public:
 # 3- Create a data actor
   - Add a new cpp class type actor to be our data actor so that the other actors can consume data directly from this data actor.
   - Header file:
-    - Declare a FMyDataStructpointer to store each row of the file
+    - Declare a FMyDataStruct pointer to store each row of the file
     - Declare a UDataTable pointer to store the entire data table file we imported and expose it to the blueprint with UPROPERTY
     - Add a Getter to get the metrics in the table
 ```cpp
@@ -57,12 +57,12 @@ class DATATABLE_API AMyActor : public AActor
 	GENERATED_BODY()
 
 private:
-	//Declare a FMyDataStructpointer to store the rows of the file
+	//Declare a FMyDataStruct pointer to store the rows of the file
 	FMyDataStruct* ConfigurationDataRow; 
 
 	
 public:	
-	// Sets default values for this actor's properties
+	//A constructor that sets default values for this actor's properties
 	AMyActor();
 
 	//Allows to use the blueprint editor to populate this UDataTable variable with values from the data table I imported 
