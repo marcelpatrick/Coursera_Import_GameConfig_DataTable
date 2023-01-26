@@ -150,8 +150,8 @@ float AMyActor::GetMyMovement()
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "MyActor.h"
-#include "MyActor.generated.h"
+#include "ConfigurationDataActor.h"
+#include "MyActor.generated.h" 
 
 UCLASS()
 class DATATABLE_API AMyActor : public APawn
@@ -188,6 +188,11 @@ private:
     - Call GetMyData() on beginplay
     - Call MoveActor() on beginplay passing the MyData pointer and CurrentActorLocation
 ```cpp
+
+#include "Engine/World.h" 
+#include "Kismet/GameplayStatics.h" 
+#include "MyActor.h"
+
 void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -244,6 +249,12 @@ void AMyActor::MoveActor(AMyActor* MyData)
 - In its header file 
   - declare an float variable to store the position from the data table to be passed to the Y component of the actor's position vector and expose it with UPROPERTY
 ```cpp
+
+#include "CoreMinimal.h"
+#include "GameFramework/SaveGame.h"
+#include "MySaveGame.generated.h"
+
+
 UCLASS()
 class DATATABLE_API UMySaveGame : public USaveGame
 {
@@ -274,6 +285,9 @@ private:
     - If there is none, initialize the current actor location and create a new empty save game object
     - If there was already a saved game, load the SavedY location and pass it into the CurrentActorLocation
 ```cpp
+
+#include "MySaveGame.h"
+
 void AMyActor::LoadGame()
 {
 	//Try to load a previously saved game
