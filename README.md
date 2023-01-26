@@ -67,7 +67,7 @@ public:
 
 	//Allows to use the blueprint editor to populate this UDataTable variable with values from the data table I imported 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Table")
-	UDataTable* ConfigurationDataTable; 
+	UDataTable* MyDataTable; 
 
 protected:
 	// Called when the game starts or when spawned
@@ -107,7 +107,7 @@ void AMyActor::BeginPlay()
 
 	FString ContextString;
 	//Row variable = File variable->FindRow<Type of data in the row>("name of that row", context string)
-	MyDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("Data", ContextString);
+	MyDataRow = MyDataTable->FindRow<FMyDataStruct>("Data", ContextString);
 
 	
 }
