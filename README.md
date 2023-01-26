@@ -27,11 +27,11 @@ public:
 	//Constructor for the struct
 		//Assign default values to each variable inside the ()
 		//MyDataStructis the DataTable row type I'm trying to import
-	FMyDataStruct() : TeddyBearMoveAmountPerSecond(100) {}
+	FMyDataStruct() : MyMovement(100) {}
 
 	//Expose each column of the table to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Struct")
-	float TeddyBearMoveAmountPerSecond;
+	float MyMovement;
 };
 ```
 
@@ -77,7 +77,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	float GetTeddyBearMoveAmountPerSecond();
+	float GetMyMovement();
 
 };
 ```
@@ -119,9 +119,9 @@ void AConfigurationDataActor::Tick(float DeltaTime)
 
 }
 
-float AConfigurationDataActor::GetTeddyBearMoveAmountPerSecond()
+float AConfigurationDataActor::GetMyMovement()
 {
-	return ConfigurationDataRow->TeddyBearMoveAmountPerSecond; 
+	return ConfigurationDataRow->MyMovement; 
 }
 ```
    - Inside Unreal
@@ -216,7 +216,7 @@ void AMyActor::MoveActor(AConfigurationDataActor* ConfigurationData)
 {
 	try
 	{
-		float Move = ConfigurationData->GetTeddyBearMoveAmountPerSecond(); 
+		float Move = ConfigurationData->GetMyMovement(); 
 
 		if (Move < 1)
 		{
