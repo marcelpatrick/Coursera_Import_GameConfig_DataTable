@@ -1,14 +1,14 @@
 # IMPORT A CSV DATA TABLE INTO UNREAL
 
 # 1- Create a struct
-   - In VS Code, create a new file ConfigurationDataStruct
+   - In Unreal, create a new C++ file MyDataStruct
    ```
    - Structs can store different types of variables inside one object
    - They are like classes but, unlike classes, they don't have inheritance so each variable from the same type of struct will have its own value 
   ```
   
 ## 1.1- Define my struct
-   - #include "Engine/DataTable.h" and "ConfigurationDataStruct.generated.h"
+   - #include "Engine/DataTable.h" and "MyDataStruct.generated.h"
    - Mark it as USTRUCT type to be used in Unreal, assign it as BlueprintType and inherit from FTableRowBase
    - Expose each column of the table to the blueprint using UPROPERTY
    ```
@@ -18,7 +18,7 @@
 
 ```cpp
 USTRUCT(BlueprintType) 
-struct FConfigurationDataStruct : public FTableRowBase
+struct FMyDataStruct: public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -26,11 +26,11 @@ public:
 
 	//Constructor for the struct
 		//Assign default values to each variable inside the ()
-		//ConfigurationDataStruct is the DataTable row type I'm trying to import
-	FConfigurationDataStruct() : TeddyBearMoveAmountPerSecond(100) {}
+		//MyDataStructis the DataTable row type I'm trying to import
+	FMyDataStruct() : TeddyBearMoveAmountPerSecond(100) {}
 
 	//Expose each column of the table to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration Data Struct")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Struct")
 	float TeddyBearMoveAmountPerSecond;
 };
 ```
@@ -38,12 +38,12 @@ public:
 # 2- Import the CSV file
    - Create a new folder in Unreal to store the file
    - Right click import and select the file
-   - Select import as datatable and select ConfigurationDataStruct as the row type
+   - Select import as datatable and select MyDataStructas the row type
 
 # 3- Create a data actor
   - Add a new cpp class type actor to be our data actor so that the other actors can consume data directly from this data actor.
   - Header file:
-    - Declare a FConfigurationDataStruct pointer to store each row of the file
+    - Declare a FMyDataStructpointer to store each row of the file
     - Declare a UDataTable pointer to store the entire data table file we imported and expose it to the blueprint with UPROPERTY
     - Add a Getter to get the metrics in the table
 ```cpp
@@ -57,8 +57,8 @@ class DATATABLE_API AConfigurationDataActor : public AActor
 	GENERATED_BODY()
 
 private:
-	//Declare a FConfigurationDataStruct pointer to store the rows of the file
-	FConfigurationDataStruct* ConfigurationDataRow; 
+	//Declare a FMyDataStructpointer to store the rows of the file
+	FMyDataStruct* ConfigurationDataRow; 
 
 	
 public:	
@@ -85,7 +85,7 @@ public:
   - Implementation cpp file
     - Set tick to false
     - In BeginPlay() get the data from each row the data table and store in my UDataTable variable
-      - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my FConfigurationDataStruct row variable
+      - Use my UDataTable variable to call FindRow() function passing in the type of row I'm trying to find and store the value into my FMyDataStructrow variable
     - Implement the Getter for that metric
       - return the row variable accessing the column variable
 ```cpp
@@ -107,7 +107,7 @@ void AConfigurationDataActor::BeginPlay()
 
 	FString ContextString;
 	//Row variable = File variable->FindRow<Type of data in the row>("name of that row", context string)
-	ConfigurationDataRow = ConfigurationDataTable->FindRow<FConfigurationDataStruct>("ConfigData", ContextString);
+	ConfigurationDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("ConfigData", ContextString);
 
 	
 }
