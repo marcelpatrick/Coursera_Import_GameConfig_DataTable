@@ -107,7 +107,7 @@ void AMyActor::BeginPlay()
 
 	FString ContextString;
 	//Row variable = File variable->FindRow<Type of data in the row>("name of that row", context string)
-	ConfigurationDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("ConfigData", ContextString);
+	ConfigurationDataRow = ConfigurationDataTable->FindRow<FMyDataStruct>("Data", ContextString);
 
 	
 }
