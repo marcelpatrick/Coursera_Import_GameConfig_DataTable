@@ -47,10 +47,10 @@ public:
 ```cpp
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MyActor.generated.h"
+#include "MyDataActor.generated.h"
 
 UCLASS()
-class DATATABLE_API AMyActor : public AActor
+class DATATABLE_API AMyDataActor : public AActor
 {
 	GENERATED_BODY()
 
@@ -61,7 +61,7 @@ private:
 	
 public:	
 	//A constructor that sets default values for this actor's properties
-	AMyActor();
+	AMyDataActor();
 
 	//Allows to use the blueprint editor to populate this UDataTable variable with values from the data table I imported 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Table")
@@ -87,10 +87,10 @@ public:
     - Implement the Getter for that metric
       - return the the specific column on that row of which data we want to store
 ```cpp
-#include "MyActor.h"
+#include "MyDataActor.h"
 
 // Sets default values
-AMyActor::AMyActor()
+AMyActor::AMyDataActor()
 {
  	// Set tick to false
 	PrimaryActorTick.bCanEverTick = false;
@@ -98,7 +98,7 @@ AMyActor::AMyActor()
 }
 
 // Called when the game starts or when spawned
-void AMyActor::BeginPlay()
+void AMyDataActor::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -111,13 +111,13 @@ void AMyActor::BeginPlay()
 }
 
 // Called every frame
-void AMyActor::Tick(float DeltaTime)
+void AMyDataActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-float AMyActor::GetMyMovement()
+float AMyDataActor::GetMyMovement()
 {
 	return MyDataRow->MyMovement; 
 }
@@ -131,7 +131,7 @@ float AMyActor::GetMyMovement()
 
 # 1- Tag the data actor
   - This allows the other actors to find the data actor by its tag
-  - Edit > Project settings > game play tag > add new gameplay tag > add new tag "MyActor"
+  - Edit > Project settings > game play tag > add new gameplay tag > add new tag "MyDataActor"
   - Open BP_MyActor and on the tag field, add a new element and name it with the same name of your tag
 
 # 2- Create an actor to consume the data
@@ -148,24 +148,24 @@ float AMyActor::GetMyMovement()
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "ConfigurationDataActor.h"
-#include "MyActor.generated.h" 
+#include "MyDataActor.h"
+#include "MyMovementActor.generated.h" 
 
 UCLASS()
-class DATATABLE_API AMyActor : public APawn
+class DATATABLE_API AMyMovementActor : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AMyActor();
+	AMyMovementActor();
 	
 	void GetMyData();
-	void MoveActor(AMyActor* MyData, FVector CurrentActorLocation);
+	void MoveActor(AMyDataActor* MyData, FVector CurrentActorLocation);
 
 private:
 
-	AMyActor* MyActor; 
+	AMyDataActor* MyData; 
 	FVector CurrentActorLocation; 
 	FVector NewActorLocation;
 
@@ -189,9 +189,9 @@ private:
 
 #include "Engine/World.h" 
 #include "Kismet/GameplayStatics.h" 
-#include "MyActor.h"
+#include "MyMovementActor.h"
 
-void AMyActor::BeginPlay()
+void AMyMovementActor::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -203,19 +203,19 @@ void AMyActor::BeginPlay()
 	
 }
 
-void AMyActor::GetMyData()
+void AMyMovementActor::GetMyData()
 {
-	TArray<AActor*> MyActors;
+	TArray<AActor*> MyDataActors;
 
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "MyActor", MyActors);
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "MyDataActor", MyDataActors);
 
-	if (MyActors.Num() > 0)
+	if (MyDataActors.Num() > 0)
 	{
-		MyData = (AMyActor*)MyActors[0]; 
+		MyData = (AMyDataActor*)MyDataActors[0]; 
 	}
 }
 
-void AMyActor::MoveActor(AMyActor* MyData)
+void AMyMovementActor::MoveActor(AMyDataActor* MyData, FVector CurrentActorLocation)
 {
 	try
 	{
