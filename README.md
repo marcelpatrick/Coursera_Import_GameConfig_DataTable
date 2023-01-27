@@ -1,7 +1,8 @@
 # IMPORT A CSV DATA TABLE INTO UNREAL
 
 # 1- Create a struct
-   - In Unreal, create a new C++ file MyDataStruct
+   - In VS Code, right click on the source folder, click add new file
+   - Create one file for your struct cpp file and one for the header file
    ```
    - Structs can store different types of variables inside one object
    - They are like classes but, unlike classes, they don't have inheritance so each variable from the same type of struct will have its own value 
