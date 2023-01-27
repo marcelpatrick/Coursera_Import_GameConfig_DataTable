@@ -23,7 +23,8 @@ struct FMyDataStruct: public FTableRowBase
 
 public:
 
-	//Constructor for the struct with its respective variables (one variable for each column of the data table)
+	//Constructor for the struct 
+		//Initialize its member variables (one for each column of the data table)
 	FMyDataStruct() : MyMovement() {}
 
 	//Expose each variable of the struct to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
