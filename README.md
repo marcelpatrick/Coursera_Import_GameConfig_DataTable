@@ -104,7 +104,7 @@ void AMyActor::BeginPlay()
 
 
 	FString ContextString;
-	//Row variable = File variable->FindRow<which struct I want to search into>("name of that row", context string)
+	//Row variable = File variable->FindRow<the struct type representing the data in the row>("name of that row", context string)
 	MyDataRow = MyDataTable->FindRow<FMyDataStruct>("Data", ContextString);
 
 	
