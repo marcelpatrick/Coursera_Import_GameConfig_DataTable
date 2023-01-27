@@ -2,7 +2,7 @@
 
 # 1- Create a struct
    - In VS Code, right click on the source folder, click add new file
-   - Create one file for your struct cpp file and one for the header file
+   - Create one file for the header file MyDataStruct
    ```
    - Structs can store different types of variables inside one object
    - They are like classes but, unlike classes, they don't have inheritance so each variable from the same type of struct will have its own value 
