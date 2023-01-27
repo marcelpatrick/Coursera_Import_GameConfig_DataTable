@@ -12,25 +12,21 @@
    - #include "Engine/DataTable.h" and "MyDataStruct.generated.h"
    - Mark it as USTRUCT type to be used in Unreal, assign it as BlueprintType and inherit from FTableRowBase
    - Expose each column of the table to the blueprint using UPROPERTY
-   ```
-   - Blueprint type allows our Unreal project to access this struct 
-   - inherit from the FTableRowBase class because it is a struct that will read a table made of rows
-   ```
 
 ```cpp
+//Blueprint type allows our Unreal project to access this struct 
 USTRUCT(BlueprintType) 
+//inherit from the FTableRowBase class because it is a struct that will read a table made of rows
 struct FMyDataStruct: public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
 
-	//Constructor for the struct
-		//Assign default values to each variable inside the ()
-		//MyDataStructis the DataTable row type I'm trying to import
-	FMyDataStruct() : MyMovement(100) {}
+	//Constructor for the struct with its respective variables (one variable for each column of the data table)
+	FMyDataStruct() : MyMovement() {}
 
-	//Expose each column of the table to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
+	//Expose each variable of the struct to the blueprint using UPROPERTY (except for "Name" which is the default meta data column)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Data Struct")
 	float MyMovement;
 };
