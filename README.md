@@ -16,7 +16,7 @@
 ```cpp
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "ConfigurationDataStruct.generated.h"
+#include "MyDataStruct.generated.h"
 
 //Blueprint type allows our Unreal project to access this struct 
 USTRUCT(BlueprintType) 
