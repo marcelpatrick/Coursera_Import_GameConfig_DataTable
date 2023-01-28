@@ -179,18 +179,7 @@ private:
 
 ```
   - Implementation file
-    - Inside GetMyData()
-      - Iterate through all the actors with that tag and save them in a TArray of Actor pointers and save the configuration data in the configuration data pointer variable
-      - If the number of actors with this tag is greater than zero, get the first actor in the array, cast it to a AMyActor pointer type and save it in my configuration data pointer
-    - Inside MoveActor()
-      - Get the current location for this actor
-      - Declare a FVector to store this actor's new location
-      - Use the MyData pointer variable to call the Get function that fetches the value of the metric you want to use and pass it to a float variable Move
-      - Assign the new location for vector Y as the current location plus the Move float
-      - Set the new actor location
-    - Get CurrentActorLocation
-    - Call GetMyData() on beginplay
-    - Call MoveActor() on beginplay passing the MyData pointer and CurrentActorLocation
+
 ```cpp
 
 #include "Engine/World.h" 
@@ -203,6 +192,7 @@ void AMyMovementActor::BeginPlay()
 
 	GetMyData();
 	
+        //Get the current location for this actor
 	CurrentActorLocation = GetActorLocation();
 
 	MoveActor(MyData, CurrentActorLocation);
@@ -212,33 +202,29 @@ void AMyMovementActor::BeginPlay()
 void AMyMovementActor::GetMyData()
 {
 	TArray<AActor*> MyDataActors;
-
+	
+	//Iterate through all the actors with that tag and save them in a TArray of Actor pointers
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "MyDataActor", MyDataActors);
 
+	//If the number of actors with this tag is greater than zero, 
 	if (MyDataActors.Num() > 0)
 	{
+		//Get the first actor in the array, cast it to a AMyDataActor pointer type and save it in MyDataActor object
 		MyData = (AMyDataActor*)MyDataActors[0]; 
 	}
 }
 
 void AMyMovementActor::MoveActor(AMyDataActor* MyData, FVector CurrentActorLocation)
 {
-	try
-	{
-		float Move = MyData->GetMyMovement(); 
 
-		if (Move < 1)
-		{
-			throw Move;
-		}
-		
-		NewActorLocation.Y = CurrentActorLocation.Y + Move;
-	}
-	catch(float Move)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Move can't be smaller than 1. Move is %f"), Move);
-	}
+	//Use the MyData pointer variable to call the Get function that fetches the value of the metric you want to use 
+		//and pass it to a float variable Move
+	float Move = MyData->GetMyMovement(); 
 
+	//Assign the new location for vector Y as the current location plus the Move float
+	NewActorLocation.Y = CurrentActorLocation.Y + Move;
+
+	//Set new actor location
 	SetActorLocation(NewActorLocation);
 }
 ```
