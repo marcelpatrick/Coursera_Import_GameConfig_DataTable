@@ -14,6 +14,8 @@
    - Expose each column of the table to the blueprint using UPROPERTY
 
 ```cpp
+#pragma once 
+
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "MyDataStruct.generated.h"
