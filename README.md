@@ -14,6 +14,10 @@
    - Expose each column of the table to the blueprint using UPROPERTY
 
 ```cpp
+#include "CoreMinimal.h"
+#include "Engine/DataTable.h"
+#include "ConfigurationDataStruct.generated.h"
+
 //Blueprint type allows our Unreal project to access this struct 
 USTRUCT(BlueprintType) 
 //inherit from the FTableRowBase class because it is a struct that will read a table made of rows
