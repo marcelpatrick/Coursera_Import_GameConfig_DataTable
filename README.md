@@ -144,9 +144,7 @@ float AMyDataActor::GetMyMovement()
   - Create a new c++ class type pawn "MyActor"
   
   - Header file
-    - Declare a pointer of MyActor type, an FVector for CurrentActorLocation and another for the NewActorLocation
-    - Declare a GetMyData() function
-    - Declare a MoveActor() function 
+
 ```cpp
 // Fill out your copyright notice in the Description page of Project Settings.
 
@@ -171,7 +169,10 @@ public:
 
 private:
 
+        //Declare a pointer of MyDataActor type
 	AMyDataActor* MyData; 
+	
+	//A FVector for CurrentActorLocation and another for the NewActorLocation
 	FVector CurrentActorLocation; 
 	FVector NewActorLocation;
 
